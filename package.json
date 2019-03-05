@@ -5,6 +5,9 @@
   "author": "contail <qkrtkdwls2121@gmail.com>",
   "description": "A simple helpful robot for your Company",
   "dependencies": {
+    "await": "^0.2.6",
+    "aws-sdk": "^2.414.0",
+    "bluebird": "^3.5.3",
     "hubot": "^3.3.0",
     "hubot-diagnostics": "^1.0.0",
     "hubot-google-images": "^0.2.7",
