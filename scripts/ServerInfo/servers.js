@@ -1,7 +1,12 @@
 const AWS = require('aws-sdk');
 const Promise = require("bluebird");
+const config = require("../config/config");
 const credentials = new AWS.SharedIniFileCredentials({profile: 'whale'});
 AWS.config.credentials = credentials;
+ImageId = config.aws.ImageId;
+KeyName = config.aws.KeyName;
+SubnetId = config.aws.SubnetId;
+Groups = config.aws.Groups;
 
 class Server{
     constructor() {
@@ -13,18 +18,18 @@ class Server{
     
     addEc2(){
         var params = {
-            ImageId: "ami-xxx", 
+            ImageId: ImageId, 
             MaxCount : 1,
             MinCount : 1,
-            KeyName: "xxx", 
+            KeyName: KeyName, 
             InstanceType: "m4.xlarge", 
             NetworkInterfaces: [{
                         AssociatePublicIpAddress: true,
                         DeleteOnTermination: true,
                         DeviceIndex: 0,
-                        SubnetId: 'subnet-xxx',
+                        SubnetId: SubnetId,
                         Groups: [
-                          'sg-xxx'
+                            Groups
                         ]
                     }],
         
@@ -33,17 +38,16 @@ class Server{
                ResourceType: "instance", 
                Tags: [
                   {
-                 Key: "xxx", 
-                 Value: "xxx"
+                 Key: "value", 
+                 Value: "cobak"
                 },
                 {
-                    Key: "xxx", 
-                    Value: "xxx"
+                    Key: "new", 
+                    Value: "true"
                    }
                ]
               }
              ]
-        
         };
         
         this.ec2.runInstances.bind(this.ec2)(params, function(err, data) {
@@ -65,7 +69,7 @@ class Server{
             let tempCount = 0;
             for (let reservation of Array.from(data.Reservations)) {
                 for (let instance of Array.from(reservation.Instances)) {
-            
+                    if (instance.State.Code !== 16) { continue; } // running
                     for (let tag of Array.from(instance.Tags)) {
                         if ((tag.Value.includes("web")) && (tag.Key === "Name")) {
                             currentCount += 1;
