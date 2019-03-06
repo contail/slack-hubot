@@ -39,7 +39,7 @@ class Server{
                Tags: [
                   {
                  Key: "value", 
-                 Value: "cobak"
+                 Value: "web"
                 },
                 {
                     Key: "new", 
